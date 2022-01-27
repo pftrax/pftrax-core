@@ -1,2 +1,2 @@
-# rimauswap-core
-Core contracts repository for the RimauSwap dex.
+# pftrax-core
+Core contracts repository for the PF Trax DEX.
