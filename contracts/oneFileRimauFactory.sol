@@ -1,7 +1,7 @@
 pragma solidity =0.5.16;
 
 
-interface IRimauFactory {
+interface IPFTXFactory {
     event PairCreated(address indexed token0, address indexed token1, address pair, uint);
 
     function feeTo() external view returns (address);
@@ -18,7 +18,7 @@ interface IRimauFactory {
 }
 
 
-interface IRimauPair {
+interface IPFTXPair {
     event Approval(address indexed owner, address indexed spender, uint value);
     event Transfer(address indexed from, address indexed to, uint value);
 
