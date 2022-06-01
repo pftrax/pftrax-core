@@ -1,4 +1,4 @@
-pragma solidity =0.5.18;
+pragma solidity =0.5.20;
 
 import './PFTXPair.sol';
 
