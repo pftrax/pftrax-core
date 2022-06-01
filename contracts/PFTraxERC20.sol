@@ -1,13 +1,13 @@
 pragma solidity =0.5.16;
 
-import './interfaces/IRimauERC20.sol';
+import './interfaces/IPFTXERC20.sol';
 import './libraries/SafeMath.sol';
 
-contract RimauERC20 is IRimauERC20 {
+contract PFTXERC20 is IPFTXERC20 {
     using SafeMath for uint;
 
-    string public constant name = 'Rimau LPs';
-    string public constant symbol = 'RIMAU-LP';
+    string public constant name = 'PFTX LPs';
+    string public constant symbol = 'PFTX-LP';
     uint8 public constant decimals = 18;
     uint  public totalSupply;
     mapping(address => uint) public balanceOf;
