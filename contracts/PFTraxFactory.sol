@@ -1,10 +1,10 @@
 pragma solidity =0.5.16;
 
-import './interfaces/IRimauFactory.sol';
-import './RimauPair.sol';
+import './interfaces/IPFTXFactory.sol';
+import './PFTXPair.sol';
 
-contract RimauFactory is IRimauFactory {
-    bytes32 public constant INIT_CODE_PAIR_HASH = keccak256(abi.encodePacked(type(RimauPair).creationCode));
+contract PFTXFactory is IPFTXFactory {
+    bytes32 public constant INIT_CODE_PAIR_HASH = keccak256(abi.encodePacked(type(PFTXPair).creationCode));
 
     address public feeTo;
     address public feeToSetter;
@@ -23,16 +23,16 @@ contract RimauFactory is IRimauFactory {
     }
 
     function createPair(address tokenA, address tokenB) external returns (address pair) {
-        require(tokenA != tokenB, 'Rimau: IDENTICAL_ADDRESSES');
+        require(tokenA != tokenB, 'PFTX: IDENTICAL_ADDRESSES');
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
-        require(token0 != address(0), 'Rimau: ZERO_ADDRESS');
-        require(getPair[token0][token1] == address(0), 'Rimau: PAIR_EXISTS'); // single check is sufficient
-        bytes memory bytecode = type(RimauPair).creationCode;
+        require(token0 != address(0), 'PFTX: ZERO_ADDRESS');
+        require(getPair[token0][token1] == address(0), 'PFTX: PAIR_EXISTS'); // single check is sufficient
+        bytes memory bytecode = type(PFTXPair).creationCode;
         bytes32 salt = keccak256(abi.encodePacked(token0, token1));
         assembly {
             pair := create2(0, add(bytecode, 32), mload(bytecode), salt)
         }
-        IRimauPair(pair).initialize(token0, token1);
+        IPFTXPair(pair).initialize(token0, token1);
         getPair[token0][token1] = pair;
         getPair[token1][token0] = pair; // populate mapping in the reverse direction
         allPairs.push(pair);
@@ -40,12 +40,12 @@ contract RimauFactory is IRimauFactory {
     }
 
     function setFeeTo(address _feeTo) external {
-        require(msg.sender == feeToSetter, 'Rimau: FORBIDDEN');
+        require(msg.sender == feeToSetter, 'PFTX: FORBIDDEN');
         feeTo = _feeTo;
     }
 
     function setFeeToSetter(address _feeToSetter) external {
-        require(msg.sender == feeToSetter, 'Rimau: FORBIDDEN');
+        require(msg.sender == feeToSetter, 'PFTX: FORBIDDEN');
         feeToSetter = _feeToSetter;
     }
 }
