@@ -1,14 +1,14 @@
 pragma solidity =0.5.16;
 
-import './interfaces/IRimauPair.sol';
-import './RimauERC20.sol';
+import './interfaces/IPFTXPair.sol';
+import './PFTXERC20.sol';
 import './libraries/Math.sol';
 import './libraries/UQ112x112.sol';
 import './interfaces/IERC20.sol';
-import './interfaces/IRimauFactory.sol';
-import './interfaces/IRimauCallee.sol';
+import './interfaces/IPFTXFactory.sol';
+import './interfaces/IPFTXCallee.sol';
 
-contract RimauPair is IRimauPair, RimauERC20 {
+contract PFTXPair is IPFTXPair, PFTXERC20 {
     using SafeMath  for uint;
     using UQ112x112 for uint224;
 
@@ -29,7 +29,7 @@ contract RimauPair is IRimauPair, RimauERC20 {
 
     uint private unlocked = 1;
     modifier lock() {
-        require(unlocked == 1, 'Rimau: LOCKED');
+        require(unlocked == 1, 'PFTX: LOCKED');
         unlocked = 0;
         _;
         unlocked = 1;
@@ -43,7 +43,7 @@ contract RimauPair is IRimauPair, RimauERC20 {
 
     function _safeTransfer(address token, address to, uint value) private {
         (bool success, bytes memory data) = token.call(abi.encodeWithSelector(SELECTOR, to, value));
-        require(success && (data.length == 0 || abi.decode(data, (bool))), 'Rimau: TRANSFER_FAILED');
+        require(success && (data.length == 0 || abi.decode(data, (bool))), 'PFTX: TRANSFER_FAILED');
     }
 
     event Mint(address indexed sender, uint amount0, uint amount1);
@@ -64,14 +64,14 @@ contract RimauPair is IRimauPair, RimauERC20 {
 
     // called once by the factory at time of deployment
     function initialize(address _token0, address _token1) external {
-        require(msg.sender == factory, 'Rimau: FORBIDDEN'); // sufficient check
+        require(msg.sender == factory, 'PFTX: FORBIDDEN'); // sufficient check
         token0 = _token0;
         token1 = _token1;
     }
 
     // update reserves and, on the first call per block, price accumulators
     function _update(uint balance0, uint balance1, uint112 _reserve0, uint112 _reserve1) private {
-        require(balance0 <= uint112(-1) && balance1 <= uint112(-1), 'Rimau: OVERFLOW');
+        require(balance0 <= uint112(-1) && balance1 <= uint112(-1), 'PFTX: OVERFLOW');
         uint32 blockTimestamp = uint32(block.timestamp % 2**32);
         uint32 timeElapsed = blockTimestamp - blockTimestampLast; // overflow is desired
         if (timeElapsed > 0 && _reserve0 != 0 && _reserve1 != 0) {
